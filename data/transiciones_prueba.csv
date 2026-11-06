@@ -1,0 +1,21 @@
+﻿caso_id,operacion_id,accion_sugerida,estado_inicial,resultado_alumno,instrucciones
+TEC-S001,TEC-O001,completar,BORRADOR,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+TEC-S002,TEC-O002,cancelar,BORRADOR,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+TEC-S003,TEC-O003,repetir_aprobacion,BORRADOR,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+TEC-S004,TEC-O004,saltar_estado,BORRADOR,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+TEC-S005,TEC-O005,aprobar,BORRADOR,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+TEC-S006,TEC-O006,completar,BORRADOR,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+TEC-S007,TEC-O007,cancelar,BORRADOR,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+TEC-S008,TEC-O008,repetir_aprobacion,BORRADOR,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+TEC-S009,TEC-O009,saltar_estado,BORRADOR,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+TEC-S010,TEC-O010,aprobar,BORRADOR,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+TEC-S011,TEC-O011,completar,BORRADOR,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+TEC-S012,TEC-O012,cancelar,BORRADOR,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+TEC-S013,TEC-O013,repetir_aprobacion,BORRADOR,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+TEC-S014,TEC-O014,saltar_estado,BORRADOR,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+TEC-S015,TEC-O015,aprobar,BORRADOR,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+TEC-S016,TEC-O016,completar,BORRADOR,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+TEC-S017,TEC-O017,cancelar,BORRADOR,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+TEC-S018,TEC-O018,repetir_aprobacion,BORRADOR,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+TEC-S019,TEC-O019,saltar_estado,BORRADOR,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion
+TEC-S020,TEC-O020,aprobar,BORRADOR,PENDIENTE,Ejecutar la operacion y registrar evento o excepcion

@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>TecnoStock · Mostrador de apartados</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b5d4b'/%3E%3Cpath d='M9 10h14M16 10v13' stroke='%23f3c75f' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+/* ===== Tokens: verde de placa electrónica + dorado de contactos ===== */
+:root{
+  --font:"Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,"Helvetica Neue",sans-serif;
+  --mono:ui-monospace,"Cascadia Mono",Consolas,"SF Mono",monospace;
+  --bg:#edf0ec;--surface:#fff;--surface2:#f5f7f4;--surface3:#e8ede7;--line:#d6ddd4;--line2:#b4c1b3;
+  --ink:#10201b;--ink2:#41534c;--ink3:#667871;
+  --brand:#0b5d4b;--brand-h:#084a3b;--brand-ink:#fff;--gold:#b7791f;--gold-w:#f6e8c9;--danger:#b4372f;--danger-w:#f7dcd9;--ok:#1e7b3a;--focus:#1d6fd1;
+  --s-BORRADOR:#66766f;--s-RESERVA_TEMPORAL:#b7791f;--s-CONFIRMADO:#2457a6;--s-LIQUIDADO:#0b7a75;--s-ENTREGADO:#1e7b3a;--s-VENCIDO:#b4372f;--s-CANCELADO:#7a7f83;
+  --r:8px;--rl:14px;--sombra:0 12px 32px rgba(8,30,24,.18),0 2px 6px rgba(8,30,24,.1);--side:236px;
+  color-scheme:light dark;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0b1310;--surface:#111d18;--surface2:#162520;--surface3:#1c2e28;--line:#243830;--line2:#35503f;
+  --ink:#e7efe9;--ink2:#a8bbb2;--ink3:#7c9288;--brand:#36c19b;--brand-h:#5fd3b3;--brand-ink:#06231b;
+  --gold:#e3a83b;--gold-w:#3a2c10;--danger:#ff7b72;--danger-w:#3f1a18;--ok:#52d17a;--focus:#6aa8ff;
+  --s-BORRADOR:#93a69d;--s-RESERVA_TEMPORAL:#e3a83b;--s-CONFIRMADO:#6aa8ff;--s-LIQUIDADO:#3ad1c7;--s-ENTREGADO:#52d17a;--s-VENCIDO:#ff7b72;--s-CANCELADO:#9aa3a8;
+  --sombra:0 12px 32px rgba(0,0,0,.55),0 2px 6px rgba(0,0,0,.4)}}
+
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 var(--font);font-feature-settings:"tnum" 1}
+h1,h2,h3,p,dl,dd{margin:0}h1{font-size:1.4rem;letter-spacing:-.01em}h2{font-size:1.02rem}h3{font-size:.95rem}
+button,input,select{font:inherit;color:inherit}button{cursor:pointer}a{color:var(--brand)}
+table{border-collapse:collapse;width:100%}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:4px}
+.mono{font-family:var(--mono);font-size:.86em}.muted{color:var(--ink3)}.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+
+/* ===== Estructura ===== */
+.app{display:grid;grid-template-columns:var(--side) minmax(0,1fr);min-height:100vh}
+.side{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:22px;padding:22px 14px;background:var(--brand);color:var(--brand-ink)}
+@media (prefers-color-scheme:dark){.side{background:#0f1f19;border-right:1px solid var(--line);color:var(--ink)}}
+.marca{display:flex;align-items:center;gap:10px;padding:0 8px;font-weight:750;font-size:1.2rem;letter-spacing:-.02em}
+.marca svg{width:28px;height:28px}.marca b{color:#f3c75f}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav a{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:var(--r);color:inherit;text-decoration:none;opacity:.82;font-weight:520}
+.nav a:hover{opacity:1;background:rgba(255,255,255,.09)}
+.nav a[aria-current=page]{opacity:1;background:rgba(255,255,255,.17);font-weight:650;box-shadow:inset 3px 0 #f3c75f}
+.nav svg{width:20px;height:20px;flex:none}
+.reglas{margin-top:auto;padding:14px;border-radius:var(--r);background:rgba(0,0,0,.2);font-size:.84rem}
+.reglas h2{font-size:.84rem;opacity:.85;margin-bottom:8px;font-weight:600}
+.reglas dl{display:grid;grid-template-columns:1fr auto;gap:4px 10px}.reglas dt{opacity:.8}.reglas dd{font-weight:650;text-align:right}
+.main{min-width:0}
+.top{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:12px 28px;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top h1{margin-right:auto}.top .sub{display:block;font-size:.86rem;color:var(--ink3);font-weight:400}
+.vista{padding:24px 28px 64px}
+
+/* ===== Controles ===== */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:7px 14px;min-height:38px;border:1px solid var(--line2);border-radius:var(--r);background:var(--surface);font-weight:600;text-decoration:none;color:var(--ink)}
+.btn:hover:not(:disabled){background:var(--surface3)}.btn svg{width:18px;height:18px;flex:none}
+.btn.p{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}.btn.p:hover:not(:disabled){background:var(--brand-h)}
+.btn.d{color:var(--danger);border-color:color-mix(in srgb,var(--danger) 45%,var(--line))}.btn.d:hover:not(:disabled){background:var(--danger-w)}
+.btn.g{border-color:transparent;background:transparent}.btn.sm{min-height:30px;padding:3px 10px;font-size:.88rem}
+.btn:disabled{opacity:.45;cursor:not-allowed}.btn[aria-busy=true]{opacity:.7;cursor:progress}
+.field{display:flex;flex-direction:column;gap:5px;min-width:0}.field>span{font-size:.85rem;font-weight:600;color:var(--ink2)}.field small{color:var(--ink3);font-size:.82rem}
+.in{width:100%;min-height:38px;padding:7px 10px;background:var(--surface);border:1px solid var(--line2);border-radius:var(--r)}
+.in:focus-visible{outline-offset:0;border-color:var(--focus)}.in[aria-invalid=true]{border-color:var(--danger);background:var(--danger-w)}
+.chk{display:flex;align-items:center;gap:8px;font-size:.92rem}.chk input{width:18px;height:18px;accent-color:var(--brand)}
+.barra-h{display:flex;gap:12px;align-items:end;flex-wrap:wrap;margin-bottom:16px}.barra-h .field{min-width:190px}.grow{flex:1}
+
+/* ===== Superficies ===== */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--rl);padding:18px 20px}.panel+.panel{margin-top:16px}.panel>h2{margin-bottom:12px}.flush{padding:0;overflow:hidden}
+.g2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,1fr);gap:20px;align-items:start}
+.scroll{overflow-x:auto}
+.tabla th{text-align:left;padding:10px 14px;font-size:.84rem;font-weight:600;color:var(--ink3);border-bottom:1px solid var(--line);background:var(--surface2);white-space:nowrap}
+.tabla td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:middle}.tabla tr:last-child td{border-bottom:0}
+.tabla th.num{text-align:right}.tabla tr.clic{cursor:pointer}.tabla tr.clic:hover{background:var(--surface2)}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:2px 9px;border-radius:99px;font-size:.82rem;font-weight:650;white-space:nowrap;color:var(--c,var(--ink2));background:color-mix(in srgb,var(--c,var(--ink3)) 13%,transparent);border:1px solid color-mix(in srgb,var(--c,var(--ink3)) 35%,transparent)}
+.chip::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--c,var(--ink3))}
+.aviso{display:flex;gap:10px;padding:12px 14px;border-radius:var(--r);background:var(--gold-w);border:1px solid color-mix(in srgb,var(--gold) 40%,transparent);font-size:.92rem}
+.aviso.err{background:var(--danger-w);border-color:color-mix(in srgb,var(--danger) 40%,transparent)}.aviso svg{width:20px;height:20px;flex:none;margin-top:1px}
+.vacio{padding:26px 16px;text-align:center;color:var(--ink3);font-size:.9rem}.vacio strong{display:block;color:var(--ink2);margin-bottom:3px}
+.cargando{padding:40px;text-align:center;color:var(--ink3)}
+.cargando::before{content:"";display:block;width:26px;height:26px;margin:0 auto 12px;border:3px solid var(--line);border-top-color:var(--brand);border-radius:50%;animation:giro .8s linear infinite}
+@keyframes giro{to{transform:rotate(360deg)}}
+
+/* ===== Barras de existencia ===== */
+.barra{display:flex;height:8px;border-radius:99px;overflow:hidden;background:var(--surface3);min-width:90px}.barra i{display:block;height:100%}
+.b-d{background:var(--brand)}.b-a{background:var(--gold)}.b-v{background:var(--ink3)}.b-p{background:var(--s-CONFIRMADO)}
+.ley{display:flex;gap:12px;font-size:.84rem;color:var(--ink2);margin-top:4px;flex-wrap:wrap}.ley b{color:var(--ink)}
+
+/* ===== Mostrador: tablero ===== */
+.pulso{display:flex;flex-wrap:wrap;gap:8px 36px;padding:0 2px 18px}.pulso dt{font-size:.84rem;color:var(--ink3)}.pulso dd{font-size:1.5rem;font-weight:700;font-variant-numeric:tabular-nums}
+.tablero{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(250px,1fr);gap:14px;overflow-x:auto;padding-bottom:10px;align-items:start}
+.col{background:var(--surface3);border-radius:var(--rl);padding:12px;display:grid;gap:10px;align-content:start;min-height:200px;border-top:4px solid var(--c,var(--line2))}
+.col__cab{display:flex;align-items:baseline;gap:8px;padding:2px 4px}.col__cab .n{margin-left:auto;font-weight:700;color:var(--c)}
+.col__nota{font-size:.82rem;color:var(--ink3);padding:0 4px;margin-top:-6px}
+details.cerr{margin-top:18px}details.cerr>summary{cursor:pointer;font-weight:650;padding:8px 2px;color:var(--ink2)}details.cerr .tablero{margin-top:8px}
+.etq{position:relative;display:grid;gap:7px;width:100%;text-align:left;padding:11px 14px 11px 34px;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--c,var(--line2));border-radius:6px 12px 12px 6px}
+.etq::before{content:"";position:absolute;left:11px;top:14px;width:11px;height:11px;border-radius:50%;background:var(--surface3);box-shadow:inset 0 0 0 2px var(--line2)}
+.etq:hover{border-color:var(--c)}.etq .f{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.etq .id{font-family:var(--mono);font-size:.84rem;font-weight:600}.etq .q{font-size:.88rem;color:var(--ink2)}
+.plazo{font-size:.84rem;font-weight:600;font-variant-numeric:tabular-nums;color:var(--c)}.plazo.urg{color:var(--danger)}
+
+/* ===== Línea de estados ===== */
+.linea{display:flex;list-style:none;padding:0;margin:4px 0 0}
+.linea li{position:relative;flex:1;display:grid;justify-items:center;gap:6px;text-align:center;font-size:.76rem;color:var(--ink3);min-width:0}
+.linea li::before{content:"";position:absolute;top:11px;right:50%;width:100%;height:3px;background:var(--line2)}.linea li:first-child::before{display:none}
+.pt{position:relative;z-index:1;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--surface);border:3px solid var(--line2)}.pt svg{width:13px;height:13px}
+.linea .ya{color:var(--ink2)}.linea .ya::before,.linea .ahora::before{background:var(--brand)}.linea .ya .pt{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+.linea .ahora{color:var(--ink);font-weight:700}.linea .ahora .pt{border-color:var(--c);box-shadow:0 0 0 4px color-mix(in srgb,var(--c) 22%,transparent)}
+.linea .ahora .pt::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--c)}
+.linea .mal{color:var(--c);font-weight:700}.linea .mal::before{background:var(--c)}.linea .mal .pt{background:var(--c);border-color:var(--c);color:#fff}
+
+/* ===== Detalle, ticket, tiempo ===== */
+.imp{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.imp div{padding:10px 12px;border-radius:var(--r);background:var(--surface2);border:1px solid var(--line)}
+.imp dt{font-size:.8rem;color:var(--ink3)}.imp dd{margin-top:2px;font-weight:700;font-size:1.02rem;font-variant-numeric:tabular-nums}
+.ticket{padding:16px 18px;background:#fbfbf6;color:#1a1f1c;font:.82rem var(--mono);border-radius:4px;box-shadow:0 1px 0 var(--line2),0 8px 0 -4px #fbfbf6,0 9px 0 -4px var(--line2)}
+.ticket h3{font-family:var(--font);text-align:center;margin-bottom:8px;color:#10201b}.ticket hr{border:0;border-top:1px dashed #9aa79f;margin:8px 0}
+.ticket .l{display:flex;justify-content:space-between;gap:12px}.ticket .qr{margin-top:10px;padding:8px;border:1px dashed #9aa79f;word-break:break-all;text-align:center}
+.tiempo{list-style:none;margin:0;padding:0 0 0 16px;border-left:2px solid var(--line);display:grid;gap:14px}
+.tiempo li{position:relative;display:grid;gap:2px}.tiempo li::before{content:"";position:absolute;left:-23px;top:5px;width:10px;height:10px;border-radius:50%;background:var(--brand);border:2px solid var(--surface)}
+.tiempo span{font-size:.84rem;color:var(--ink3)}.tiempo .dato{font:.8rem var(--mono);color:var(--ink2);word-break:break-word}
+
+/* ===== Nuevo apartado ===== */
+.cat{display:grid;gap:8px;max-height:560px;overflow-y:auto;padding-right:4px}
+.prod{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding:10px 12px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);align-items:center}.prod.ag{opacity:.55}
+.prod .n{font-weight:600}.prod .m{font-size:.84rem;color:var(--ink3)}
+.cant{display:inline-flex;border:1px solid var(--line2);border-radius:var(--r);overflow:hidden}.cant button{width:32px;border:0;background:var(--surface2);font-weight:700}.cant button:hover:not(:disabled){background:var(--surface3)}
+.cant input{width:44px;text-align:center;border:0;border-inline:1px solid var(--line2);background:var(--surface)}
+.resumen{position:sticky;top:84px;display:grid;gap:12px}.resumen td{padding:5px 0}.resumen .tot td{border-top:1px dashed var(--line2);padding-top:9px;font-weight:700}
+.chk-l{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:.9rem}.chk-l li{display:flex;gap:8px}.chk-l svg{width:18px;height:18px;flex:none;margin-top:2px}.chk-l .ok{color:var(--ok)}.chk-l .no{color:var(--danger)}
+
+/* ===== Reloj ===== */
+.reloj{position:relative}.reloj>.btn[data-sim=true]{border-color:var(--gold);background:var(--gold-w)}
+.pop{position:absolute;right:0;top:calc(100% + 8px);z-index:20;width:330px;padding:16px;background:var(--surface);border:1px solid var(--line2);border-radius:var(--rl);box-shadow:var(--sombra);display:grid;gap:12px}.pop[hidden]{display:none}.pop p{font-size:.88rem;color:var(--ink2)}.fila{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ===== Toasts, modal, drawer ===== */
+#toasts{position:fixed;right:20px;bottom:20px;z-index:100;display:grid;gap:10px;width:min(420px,calc(100vw - 40px))}
+.toast{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:start;padding:12px 14px;background:var(--ink);color:var(--bg);border-radius:var(--r);box-shadow:var(--sombra);animation:ent .18s ease-out}
+.toast svg{width:20px;height:20px}.toast.ok svg{color:#6ee0a4}.toast.err{background:#7f1d17;color:#fff}.toast b{display:block;font-size:.92rem}.toast span{font-size:.88rem;word-break:break-word}
+.toast button{background:none;border:0;color:inherit;opacity:.7;padding:2px}.toast button svg{width:16px;height:16px}@keyframes ent{from{transform:translateY(8px);opacity:0}}
+dialog{border:0;padding:0;background:var(--surface);color:var(--ink);box-shadow:var(--sombra)}dialog::backdrop{background:rgba(6,20,15,.55)}
+dialog.modal{width:min(520px,calc(100vw - 32px));border-radius:var(--rl)}
+.m-cab{padding:18px 22px 0;display:flex;gap:12px;align-items:start}.m-cab h2{flex:1;font-size:1.15rem}.m-cuerpo{padding:14px 22px;display:grid;gap:14px}
+.m-pie{padding:14px 22px 20px;display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;border-top:1px solid var(--line);background:var(--surface2);border-radius:0 0 var(--rl) var(--rl)}
+dialog.drawer{margin:0 0 0 auto;height:100vh;max-height:100vh;width:min(640px,100vw);border-radius:var(--rl) 0 0 var(--rl);overflow-y:auto;animation:des .2s ease-out}
+@keyframes des{from{transform:translateX(40px);opacity:.4}}
+.d-cab{position:sticky;top:0;z-index:2;display:flex;gap:12px;align-items:center;padding:16px 22px;background:var(--surface);border-bottom:1px solid var(--line)}.d-cab h2{flex:1;font-size:1.12rem}
+.d-sec{padding:18px 22px;border-bottom:1px solid var(--line);display:grid;gap:12px}.d-sec>h3{color:var(--ink2)}.acc{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ===== Monedero, pruebas ===== */
+.saldo{font-size:2.4rem;font-weight:750;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.met{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}.met div{padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r)}
+.met dt{color:var(--ink3);font-size:.85rem}.met dd{margin-top:2px;font-size:1.6rem;font-weight:700}.met .bien dd{color:var(--ok)}.met .mal dd{color:var(--danger)}
+
+@media (max-width:960px){
+  .app{grid-template-columns:1fr}.side{position:static;height:auto;gap:12px;padding:12px 14px}.nav{flex-direction:row;overflow-x:auto}.nav a{padding:8px 12px;white-space:nowrap}
+  .nav a[aria-current=page]{box-shadow:inset 0 -3px #f3c75f}.reglas{display:none}.top,.vista{padding-inline:16px}.g2{grid-template-columns:1fr}.resumen{position:static}.imp{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="marca"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#f3c75f"/><path d="M9 10h14M16 10v13" stroke="#0b5d4b" stroke-width="3" stroke-linecap="round"/></svg><span>Tecno<b>Stock</b></span></div>
+    <nav class="nav" id="nav" aria-label="Secciones"></nav>
+    <div class="reglas"><h2>Reglas vigentes</h2><dl id="reglas"></dl></div>
+  </aside>
+  <div class="main">
+    <header class="top">
+      <h1 id="titulo"></h1>
+      <div class="reloj"><button type="button" class="btn" id="reloj-btn" aria-expanded="false" aria-controls="reloj-pop"></button>
+        <div class="pop" id="reloj-pop" hidden></div></div>
+    </header>
+    <main class="vista" id="vista" tabindex="-1"></main>
+  </div>
+</div>
+<div id="toasts" aria-live="polite"></div>
+<script type="module">
+/* ============================ utilidades ============================ */
+const $ = (id) => document.getElementById(id);
+function h(tag, props = {}, ...hijos) {               // DOM sin innerHTML: el texto nunca se interpreta como HTML
+  const el = document.createElement(tag);
+  for (const [k, v] of Object.entries(props || {})) {
+    if (v == null || v === false) continue;
+    if (k === 'class') el.className = v;
+    else if (k === 'dataset') Object.assign(el.dataset, v);
+    else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+    else if (k === 'value') el.value = v;
+    else el.setAttribute(k, v === true ? '' : v);
+  }
+  for (const c of hijos.flat(Infinity)) if (c != null && c !== false) el.append(c.nodeType ? c : document.createTextNode(String(c)));
+  return el;
+}
+const MXN = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
+const money = (v) => MXN.format(Number(v));
+const parseUTC = (s) => (s ? new Date(/(Z|[+-]\d\d:?\d\d)$/.test(s) ? s : s + 'Z') : null);
+const fecha = (s) => { const d = parseUTC(s); return d ? d.toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : '—'; };
+function restante(ms) {
+  if (ms <= 0) return null;
+  const s = Math.floor(ms / 1000), m = Math.floor(s / 60), hh = Math.floor(m / 60), d = Math.floor(hh / 24);
+  return d >= 1 ? `${d} d ${hh % 24} h` : hh >= 1 ? `${hh} h ${m % 60} min` : `${String(m).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+}
+const P = {
+  tablero: '<rect x="3" y="4" width="5" height="16" rx="1"/><rect x="10" y="4" width="5" height="10" rx="1"/><rect x="17" y="4" width="4" height="13" rx="1"/>',
+  caja: '<path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/><path d="M3 7.5 12 12l9-4.5M12 12v9"/>',
+  mas: '<path d="M12 5v14M5 12h14"/>', lista: '<path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/>',
+  cartera: '<path d="M3 7a2 2 0 0 1 2-2h13v4"/><path d="M3 7v11a2 2 0 0 0 2 2h15V9H5a2 2 0 0 1-2-2z"/><path d="M16 14.5h.01"/>',
+  pulso: '<path d="M3 12h4l3 8 4-16 3 8h4"/>', escudo: '<path d="M12 3 4.5 6v5.5c0 4.6 3.1 8 7.5 9.5 4.4-1.5 7.5-4.9 7.5-9.5V6z"/><path d="m9 12 2.2 2.2L15.5 10"/>',
+  reloj: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>', x: '<path d="M6 6l12 12M18 6 6 18"/>', ok: '<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+  alerta: '<path d="M12 4 2.8 20h18.4z"/><path d="M12 10v4.5M12 17.5h.01"/>',
+};
+function ic(n) {
+  const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  for (const [k, v] of Object.entries({ viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': '1.9', 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true' })) s.setAttribute(k, v);
+  s.innerHTML = P[n] || '';   // constantes del código, nunca datos del usuario
+  return s;
+}
+
+/* ============================ estado y reloj ============================ */
+const ESTADOS = {
+  BORRADOR: ['Borrador', 'Creados sin reservar. Reserva para bloquear el stock.'],
+  RESERVA_TEMPORAL: ['Reserva temporal', 'Stock bloqueado 15 min esperando el anticipo.'],
+  CONFIRMADO: ['Confirmado', 'Anticipo pagado. Liquida antes de que venza.'],
+  LIQUIDADO: ['Liquidado', 'Pagado completo. Falta entregar con número de serie.'],
+  ENTREGADO: ['Entregado', 'Salida física registrada.'],
+  VENCIDO: ['Vencido', 'Pasaron 30 días: el anticipo pasó al monedero.'],
+  CANCELADO: ['Cancelado', 'Cancelado a mano o reserva sin pago.'],
+};
+const FLUJO = ['BORRADOR', 'RESERVA_TEMPORAL', 'CONFIRMADO', 'LIQUIDADO', 'ENTREGADO'];
+const ACTIVOS = ['RESERVA_TEMPORAL', 'CONFIRMADO'];
+const S = { cfg: null, actores: new Map() };
+const nombre = (id) => (S.actores.get(id) || {}).nombre || id;
+
+let desfase = Number(sessionStorage.getItem('ts.desfase') || 0);
+const ahora = () => new Date(Date.now() + desfase);
+const simulado = () => desfase !== 0;
+const paraServidor = () => (simulado() ? ahora().toISOString().slice(0, 19) : null);
+const setDesfase = (v) => { desfase = v; sessionStorage.setItem('ts.desfase', String(v)); pintarReloj(); refrescar(); };
+
+/* ============================ API ============================ */
+class ApiError extends Error { constructor(st, d) { super((d && typeof d.detail === 'string' && d.detail) || (d && JSON.stringify(d.detail)) || `Error HTTP ${st}`); this.status = st; this.tipo = (d && d.error) || 'HTTPError'; } }
+async function pedir(ruta, metodo = 'GET', cuerpo) {
+  let r;
+  try { r = await fetch(ruta, { method: metodo, headers: cuerpo ? { 'Content-Type': 'application/json' } : {}, body: cuerpo ? JSON.stringify(cuerpo) : undefined }); }
+  catch { throw new ApiError(0, { error: 'SinConexion', detail: 'No se pudo contactar al servidor. Revisa tu conexión.' }); }
+  const d = await r.json().catch(() => null);
+  if (!r.ok) throw new ApiError(r.status, d);
+  return d;
+}
+const get = (r) => pedir(r);
+const post = (r, c = {}) => pedir(r, 'POST', { ...c, ahora: paraServidor() });
+const enc = encodeURIComponent;
+const qs = (o) => { const p = new URLSearchParams(); for (const [k, v] of Object.entries(o)) if (v) p.set(k, v); const s = p.toString(); return s ? '?' + s : ''; };
+const api = {
+  config: () => get('/api/config'), actores: () => get('/api/actores'), productos: () => get('/api/productos'),
+  disponibilidad: (id) => get(`/api/productos/${enc(id)}/disponibilidad`), monedero: (c) => get(`/api/monederos/${enc(c)}`),
+  eventos: (n = 500) => get(`/api/eventos?limite=${n}`), apartados: (f = {}) => get('/api/apartados' + qs(f)), apartado: (id) => get(`/api/apartados/${enc(id)}`),
+  evaluacion: (id) => get(`/api/apartados/${enc(id)}/evaluacion`), crear: (c) => post('/api/apartados', c),
+  accion: (id, a, c) => post(`/api/apartados/${enc(id)}/${a}`, c), vencimientos: () => post('/api/mantenimiento/vencimientos'),
+  pruebas: () => pedir('/api/pruebas/ejecutar', 'POST'),
+};
+
+/* ============================ toasts y modales ============================ */
+const TITULOS = { ReglaNegocioError: 'Regla de negocio', ConflictoError: 'Conflicto', TransicionInvalidaError: 'Transición no permitida', ValidacionError: 'Dato inválido', NoEncontradoError: 'No encontrado', SinConexion: 'Sin conexión' };
+function toast(t, d = '', tipo = 'ok', ms = 5200) {
+  const n = h('div', { class: `toast ${tipo}`, role: tipo === 'err' ? 'alert' : 'status' }, ic(tipo === 'err' ? 'alerta' : 'ok'),
+    h('div', {}, h('b', {}, t), d ? h('span', {}, d) : null), h('button', { type: 'button', 'aria-label': 'Cerrar aviso', onclick: () => n.remove() }, ic('x')));
+  $('toasts').append(n); setTimeout(() => n.remove(), ms);
+}
+const toastError = (e) => toast(TITULOS[e.tipo] || 'No se pudo completar', e.message, 'err', 9000);
+function modal({ titulo, cuerpo, acciones = [], alCerrar }) {
+  const dlg = h('dialog', { class: 'modal', 'aria-label': titulo });
+  const botones = acciones.map((a) => {
+    const b = h('button', { type: 'button', class: `btn ${a.t === 'p' ? 'p' : a.t === 'd' ? 'd' : ''}` }, a.texto);
+    b.addEventListener('click', async () => { b.disabled = true; b.setAttribute('aria-busy', 'true'); try { if ((a.alClic ? await a.alClic() : true) !== false) dlg.close(); } finally { b.disabled = false; b.removeAttribute('aria-busy'); } });
+    return b;
+  });
+  dlg.append(h('div', { class: 'm-cab' }, h('h2', {}, titulo), h('button', { type: 'button', class: 'btn g sm', 'aria-label': 'Cerrar', onclick: () => dlg.close() }, ic('x'))),
+    h('div', { class: 'm-cuerpo' }, cuerpo), acciones.length ? h('div', { class: 'm-pie' }, botones) : null);
+  dlg.addEventListener('close', () => { dlg.remove(); alCerrar && alCerrar(); });
+  dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
+  document.body.append(dlg); dlg.showModal(); (dlg.querySelector('input,select') || dlg.querySelector('.m-pie button:last-child'))?.focus();
+}
+const confirmar = (titulo, mensaje, ok, peligro) => new Promise((res) => {
+  let hecho = false;
+  modal({ titulo, cuerpo: h('p', {}, mensaje), acciones: [{ texto: 'Volver', alClic: () => { hecho = true; res(false); } }, { texto: ok, t: peligro ? 'd' : 'p', alClic: () => { hecho = true; res(true); } }], alCerrar: () => { if (!hecho) res(false); } });
+});
+
+/* ============================ piezas compartidas ============================ */
+const chip = (e) => h('span', { class: 'chip', style: `--c:var(--s-${e})` }, ESTADOS[e] ? ESTADOS[e][0] : e);
+const vacio = (t, x = '') => h('div', { class: 'vacio' }, h('strong', {}, t), x);
+const cargando = () => h('div', { class: 'cargando', role: 'status' }, 'Cargando…');
+const errPanel = (e, re) => h('div', { class: 'aviso err', role: 'alert' }, ic('alerta'), h('div', {}, h('b', {}, 'No se pudo cargar. '), e.message, re ? h('div', { style: 'margin-top:8px' }, h('button', { type: 'button', class: 'btn sm', onclick: re }, 'Reintentar')) : null));
+function plazo(a) {
+  const hasta = a.estado === 'RESERVA_TEMPORAL' ? a.reserva_expira_en : a.estado === 'CONFIRMADO' ? a.vence_en : null;
+  if (!hasta) return null;
+  const el = h('span', { class: 'plazo', dataset: { hasta, reserva: a.estado === 'RESERVA_TEMPORAL' ? '1' : '' } });
+  pintaPlazo(el); return el;
+}
+function pintaPlazo(el) {
+  const ms = parseUTC(el.dataset.hasta) - ahora(), t = restante(ms), r = !!el.dataset.reserva;
+  el.textContent = t ? `${r ? 'Expira en' : 'Vence en'} ${t}` : r ? 'Reserva expirada: falta procesar vencimientos' : 'Plazo cumplido: falta procesar vencimientos';
+  el.classList.toggle('urg', ms < (r ? 300e3 : 3 * 86400e3));
+}
+setInterval(() => document.querySelectorAll('.plazo[data-hasta]').forEach(pintaPlazo), 1000);
+function etiqueta(a) {
+  const pct = Number(a.total) ? Math.min(100, (Number(a.total) - Number(a.saldo)) / Number(a.total) * 100) : 0;
+  return h('button', { type: 'button', class: 'etq', style: `--c:var(--s-${a.estado})`, onclick: () => abrirDetalle(a.apartado_id), 'aria-label': `Abrir apartado ${a.apartado_id}` },
+    h('div', { class: 'f' }, h('span', { class: 'id' }, a.apartado_id), h('b', { class: 'num' }, money(a.total))),
+    h('div', { class: 'q' }, `${nombre(a.cliente_id)}, ${a.articulos} ${a.articulos === 1 ? 'pieza' : 'piezas'}`),
+    a.estado !== 'BORRADOR' && a.estado !== 'CANCELADO' ? h('div', { class: 'barra', role: 'img', 'aria-label': `Pagado ${pct.toFixed(0)} por ciento` }, h('i', { class: 'b-p', style: `width:${pct}%` })) : null, plazo(a));
+}
+function lineaEstados(a, evs) {
+  const reservo = evs.some((e) => e.tipo === 'ReservaTemporalCreada');
+  const fin = a.estado === 'VENCIDO' || a.estado === 'CANCELADO' ? a.estado : null;
+  const alc = a.estado === 'VENCIDO' ? 2 : a.estado === 'CANCELADO' ? (reservo ? 1 : 0) : FLUJO.indexOf(a.estado);
+  let pasos = FLUJO.map((e, i) => {
+    const ya = fin ? i <= alc : i < alc, now = !fin && i === alc;
+    return h('li', { class: now ? 'ahora' : ya ? 'ya' : '', style: `--c:var(--s-${e})`, 'aria-current': now ? 'step' : null }, h('span', { class: 'pt' }, ya ? ic('ok') : null), ESTADOS[e][0]);
+  });
+  if (fin) pasos = [...pasos.slice(0, alc + 1), h('li', { class: 'mal', style: `--c:var(--s-${fin})` }, h('span', { class: 'pt' }, ic('x')), ESTADOS[fin][0])];
+  return h('ol', { class: 'linea', 'aria-label': 'Progreso del apartado' }, pasos);
+}
+const EV = { ReservaTemporalCreada: 'Reserva temporal creada', ReservaTemporalExpirada: 'Reserva expirada sin pago', ApartadoConfirmado: 'Anticipo confirmado', ApartadoLiquidado: 'Apartado liquidado', ApartadoVencido: 'Apartado vencido', ApartadoCancelado: 'Apartado cancelado', SalidaFisicaRegistrada: 'Salida física registrada', SaldoAFavorGenerado: 'Saldo a favor generado' };
+const MONTO = new Set(['anticipo', 'total', 'monto']);
+const datosEv = (p) => Object.entries(p).filter(([k]) => !['ocurrido_en', 'apartado_id'].includes(k)).map(([k, v]) => `${k.replaceAll('_', ' ')}: ${MONTO.has(k) ? money(v) : Array.isArray(v) ? v.join(', ') : /_en$/.test(k) ? fecha(v) : v}`).join(', ');
+const dato = (t, v) => h('div', {}, h('dt', {}, t), h('dd', {}, v));
+const refrescar = () => { if (rutaActual && vistas[rutaActual.nombre]) cargarVista(); };
+
+/* ============================ detalle del apartado ============================ */
+function abrirDetalle(id) {
+  const dlg = h('dialog', { class: 'drawer', 'aria-label': `Apartado ${id}` });
+  let cambio = false;
+  document.body.append(dlg); dlg.showModal();
+  dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
+  dlg.addEventListener('close', () => { dlg.remove(); if (cambio) refrescar(); });
+  const cab = (a) => h('div', { class: 'd-cab' }, h('h2', {}, h('span', { class: 'mono' }, id), ' ', a ? chip(a.estado) : null), h('button', { type: 'button', class: 'btn g sm', 'aria-label': 'Cerrar panel', onclick: () => dlg.close() }, ic('x')));
+  const poner = (...n) => dlg.replaceChildren(...n);
+  async function cargar() {
+    poner(cab(null), cargando());
+    try { const [a, todos] = await Promise.all([api.apartado(id), api.eventos(500)]); pintar(a, todos.filter((e) => e.payload.apartado_id === id).reverse()); }
+    catch (e) { poner(cab(null), h('div', { class: 'd-sec' }, errPanel(e, cargar))); }
+  }
+  async function ejecutar(fn, ok) { cambio = true; try { await fn(); toast(ok); await cargar(); return true; } catch (e) { toastError(e); await cargar(); return false; } }
+  function pintar(a, evs) {
+    const v = new Set(a.acciones_validas), bt = [];
+    const B = (t, k, f) => h('button', { type: 'button', class: `btn ${k || ''}`, onclick: f }, t);
+    if (a.estado === 'BORRADOR') bt.push(B('Reservar y bloquear stock', 'p', () => ejecutar(() => api.accion(id, 'reservar'), 'Reserva temporal abierta')));
+    if (a.estado === 'RESERVA_TEMPORAL') bt.push(B('Pagar anticipo', 'p', () => pago(a, true)));
+    if (a.estado === 'CONFIRMADO') bt.push(B('Liquidar saldo', 'p', () => pago(a, false)));
+    if (a.estado === 'LIQUIDADO') bt.push(B('Registrar entrega', 'p', () => series(a)));
+    if (v.has('cancelar')) bt.push(B('Cancelar apartado', 'd', async () => { if (await confirmar('¿Cancelar este apartado?', 'Se libera el stock reservado. No se puede deshacer.', 'Cancelar apartado', true)) ejecutar(() => api.accion(id, 'cancelar'), 'Apartado cancelado'); }));
+    bt.push(B('Ver reglas', '', () => reglas(a)));
+    const pista = { CONFIRMADO: 'Un apartado confirmado ya no se cancela: liquídalo antes del vencimiento o el anticipo pasará al monedero.', ENTREGADO: 'Ciclo completo: la salida física quedó registrada con sus números de serie.', VENCIDO: 'El stock volvió a la venta y el anticipo se abonó al monedero del cliente.', CANCELADO: 'Apartado cerrado. El stock fue liberado.' }[a.estado];
+    const p = plazo(a);
+    poner(cab(a),
+      h('section', { class: 'd-sec' }, h('div', {}, h('b', {}, nombre(a.cliente_id)), h('span', { class: 'muted' }, `  ${a.cliente_id}, ${a.sucursal_id}`)), lineaEstados(a, evs),
+        p ? h('div', {}, p, a.estado === 'RESERVA_TEMPORAL' ? ' para pagar el anticipo' : ' para liquidar') : null, h('div', { class: 'acc' }, bt), pista ? h('p', { class: 'muted' }, pista) : null),
+      h('section', { class: 'd-sec' }, h('h3', {}, 'Importes'), h('dl', { class: 'imp' }, dato('Total', money(a.total)),
+        Number(a.anticipo_pagado) > 0 ? dato('Anticipo pagado', money(a.anticipo_pagado)) : dato(`Anticipo mínimo (${Math.round(Number(S.cfg.porcentaje_anticipo) * 100)} %)`, money(a.anticipo_minimo)), dato('Saldo pendiente', money(a.saldo)))),
+      h('section', { class: 'd-sec' }, h('h3', {}, 'Partidas'), h('div', { class: 'scroll' }, h('table', { class: 'tabla' },
+        h('thead', {}, h('tr', {}, h('th', {}, 'Producto'), h('th', { class: 'num' }, 'Cant.'), h('th', { class: 'num' }, 'Precio'), h('th', { class: 'num' }, 'Subtotal'))),
+        h('tbody', {}, a.lineas.map((l) => h('tr', {}, h('td', { class: 'mono' }, l.recurso_id), h('td', { class: 'num' }, l.cantidad), h('td', { class: 'num' }, money(l.precio_unitario)), h('td', { class: 'num' }, money(l.subtotal)))))))),
+      a.comprobante ? h('section', { class: 'd-sec' }, h('h3', {}, 'Comprobante'), h('div', { class: 'ticket' }, h('h3', {}, 'TecnoStock'),
+        h('div', { class: 'l' }, h('span', {}, 'Folio'), h('b', {}, a.comprobante.folio)), h('div', { class: 'l' }, h('span', {}, 'Cliente'), h('span', {}, a.cliente_id)), h('hr'),
+        a.lineas.map((l) => h('div', { class: 'l' }, h('span', {}, `${l.cantidad} x ${l.recurso_id}`), h('span', {}, money(l.subtotal)))), h('hr'),
+        h('div', { class: 'l' }, h('b', {}, 'Total pagado'), h('b', {}, money(a.total))), h('div', { class: 'qr' }, a.comprobante.codigo_qr))) : null,
+      a.numeros_serie.length ? h('section', { class: 'd-sec' }, h('h3', {}, 'Números de serie entregados'), h('ul', { style: 'margin:0;padding-left:18px' }, a.numeros_serie.map((s) => h('li', { class: 'mono' }, s)))) : null,
+      h('section', { class: 'd-sec' }, h('h3', {}, 'Historia'), evs.length ? h('ol', { class: 'tiempo' }, evs.map((e) => h('li', {}, h('b', {}, EV[e.tipo] || e.tipo), h('span', {}, fecha(e.ocurrido_en)), h('span', { class: 'dato' }, datosEv(e.payload)))))
+        : h('p', { class: 'muted' }, 'Sin eventos todavía: viene de los datos del PIA y está en borrador.')));
+  }
+  function pago(a, anticipo) {
+    const meta = Number(anticipo ? a.anticipo_minimo : a.saldo), total = Number(a.total);
+    const campo = h('input', { class: 'in mono', inputmode: 'decimal', value: meta.toFixed(2) }), ayuda = h('small');
+    const act = () => { const x = Number(campo.value), ok = Number.isFinite(x) && x > 0; campo.setAttribute('aria-invalid', String(!ok));
+      ayuda.textContent = !ok ? 'Escribe un importe mayor a cero.' : anticipo ? `Cubre ${(x / total * 100).toFixed(1)} % del total; el mínimo es ${money(meta)}.` : x === meta ? 'Cubre el saldo completo.' : `La liquidación debe ser exactamente ${money(meta)}.`; };
+    campo.addEventListener('input', act); act();
+    modal({ titulo: anticipo ? 'Pagar anticipo' : 'Liquidar saldo', cuerpo: [
+      h('dl', { class: 'imp' }, dato('Total', money(total)), dato(anticipo ? 'Mínimo exigido' : 'Saldo a pagar', money(meta)), dato('Anticipo previo', money(a.anticipo_pagado))),
+      h('label', { class: 'field' }, h('span', {}, 'Importe a cobrar (MXN)'), campo, ayuda),
+      anticipo ? h('div', { class: 'fila' }, h('button', { type: 'button', class: 'btn sm', onclick: () => { campo.value = meta.toFixed(2); act(); } }, 'Pagar el mínimo'), h('button', { type: 'button', class: 'btn sm', onclick: () => { campo.value = total.toFixed(2); act(); } }, 'Pagar el total')) : null],
+      acciones: [{ texto: 'Volver' }, { texto: anticipo ? 'Cobrar anticipo' : 'Cobrar y emitir ticket', t: 'p', alClic: () => ejecutar(() => api.accion(id, anticipo ? 'anticipo' : 'liquidar', { monto: campo.value.trim() }), anticipo ? 'Apartado confirmado: 30 días de vigencia' : 'Liquidado: ticket con QR generado') }] });
+  }
+  function series(a) {
+    const us = a.lineas.flatMap((l) => Array.from({ length: l.cantidad }, (_, i) => `${l.recurso_id}, unidad ${i + 1}`));
+    const cs = us.map((u, i) => h('label', { class: 'field' }, h('span', {}, u), h('input', { class: 'in mono', autocomplete: 'off', placeholder: `Número de serie ${i + 1}` })));
+    modal({ titulo: 'Registrar entrega', cuerpo: [h('p', {}, `Una serie única por unidad (${us.length}). La salida física se registra una sola vez.`), ...cs,
+      h('div', { class: 'fila' }, h('button', { type: 'button', class: 'btn sm', onclick: () => cs.forEach((c, i) => { c.querySelector('input').value = `SN-${id}-${i + 1}`; }) }, 'Rellenar con series de ejemplo'))],
+      acciones: [{ texto: 'Volver' }, { texto: 'Registrar salida física', t: 'p', alClic: () => ejecutar(() => api.accion(id, 'entregar', { numeros_serie: cs.map((c) => c.querySelector('input').value.trim()) }), 'Salida física registrada') }] });
+  }
+  async function reglas(a) {
+    let ev; try { ev = await api.evaluacion(a.apartado_id); } catch (e) { return toastError(e); }
+    const N = { actor_activo: 'Cliente activo', detalle_no_vacio: 'Tiene al menos una partida', autorizada: 'Operación autorizada', actor_preferente: 'Cliente preferente', promocion_activa: 'Sin promoción activa' };
+    const bloque = (t, r, inv = []) => h('div', {}, h('h3', {}, t, ' ', h('span', { class: 'chip', style: `--c:var(--s-${r.cumple ? 'ENTREGADO' : 'VENCIDO'})` }, r.cumple ? 'Cumple' : 'No cumple')),
+      h('p', { class: 'mono muted', style: 'margin:6px 0' }, r.regla), h('ul', { class: 'chk-l' }, Object.entries(r.detalle).map(([k, x]) => { const bien = inv.includes(k) ? !x : x;
+        return h('li', {}, h('span', { class: bien ? 'ok' : 'no' }, ic(bien ? 'ok' : 'x')), N[k] || (k.startsWith('total>=') ? `Total de al menos ${money(k.slice(7))}` : k)); })));
+    modal({ titulo: `Reglas de ${a.apartado_id}`, cuerpo: [h('p', { class: 'muted' }, 'Evaluadas con el patrón Specification (AND / OR / NOT) sobre el estado actual.'), bloque('Puede procesarse', ev.puede_procesarse), bloque('Beneficio de referencia', ev.beneficio_referencia, ['promocion_activa'])], acciones: [{ texto: 'Cerrar', t: 'p' }] });
+  }
+  cargar();
+}
+
+/* ============================ vistas ============================ */
+const PRINCIPALES = ['BORRADOR', 'RESERVA_TEMPORAL', 'CONFIRMADO', 'LIQUIDADO'], CERRADOS = ['ENTREGADO', 'VENCIDO', 'CANCELADO'];
+const VACIOS = { BORRADOR: ['Sin borradores', 'Todo fue reservado o cancelado.'], RESERVA_TEMPORAL: ['Nada reservado ahora', 'Reserva un borrador o crea un apartado.'], CONFIRMADO: ['Sin confirmados', 'Aparecen al pagar el anticipo.'], LIQUIDADO: ['Nada por entregar', 'Aparecen al liquidar el saldo.'], ENTREGADO: ['Sin entregas', ''], VENCIDO: ['Sin vencidos', 'Avanza el reloj 31 días y procesa vencimientos.'], CANCELADO: ['Sin cancelados', ''] };
+const TOPE = 12;
+const vistas = {
+  async mostrador() {
+    const [aps, prods] = await Promise.all([api.apartados(), api.productos()]);
+    const u = { d: 0, a: 0, v: 0 };
+    prods.forEach((p) => Object.values(p.sucursales).forEach((s) => { u.d += s.disponible; u.a += s.apartada; u.v += s.vendida; }));
+    const col = (e) => { const l = aps.filter((a) => a.estado === e), [t, x] = VACIOS[e];
+      return h('section', { class: 'col', style: `--c:var(--s-${e})`, 'aria-label': ESTADOS[e][0] }, h('div', { class: 'col__cab' }, h('h2', {}, ESTADOS[e][0]), h('span', { class: 'n' }, l.length)), h('p', { class: 'col__nota' }, ESTADOS[e][1]),
+        l.length ? l.slice(0, TOPE).map(etiqueta) : vacio(t, x), l.length > TOPE ? h('a', { class: 'btn g sm', href: `#/apartados?estado=${e}` }, `Ver los ${l.length}`) : null); };
+    const cerr = CERRADOS.map(col);
+    return h('div', {}, h('dl', { class: 'pulso' }, ...[['Piezas disponibles', u.d], ['Apartadas', u.a], ['Vendidas', u.v], ['Apartados', aps.length]].map(([t, v]) => h('div', {}, h('dt', {}, t), h('dd', {}, v)))),
+      h('div', { class: 'tablero' }, PRINCIPALES.map(col)), h('details', { class: 'cerr', open: CERRADOS.some((e) => aps.some((a) => a.estado === e)) || null }, h('summary', {}, 'Apartados cerrados (entregados, vencidos, cancelados)'), h('div', { class: 'tablero' }, cerr)));
+  },
+  async inventario() {
+    const prods = await api.productos(), cuerpo = h('tbody'), busca = h('input', { class: 'in', type: 'search', placeholder: 'Buscar por nombre o clave', 'aria-label': 'Buscar producto' });
+    const pintar = () => { const q = busca.value.trim().toLowerCase(), f = prods.filter((p) => !q || p.descripcion.toLowerCase().includes(q) || p.recurso_id.toLowerCase().includes(q));
+      cuerpo.replaceChildren(...(f.length ? f.map((p) => { const s = Object.values(p.sucursales)[0] || { disponible: 0, apartada: 0, vendida: 0 }, t = s.disponible + s.apartada + s.vendida || 1;
+        return h('tr', {}, h('td', {}, h('div', {}, h('b', {}, p.descripcion)), h('span', { class: 'mono muted' }, p.recurso_id), p.habilitado ? null : h('span', { class: 'chip', style: 'margin-left:8px;--c:var(--s-CANCELADO)' }, 'Deshabilitado')),
+          h('td', { class: 'num' }, money(p.precio)), h('td', { style: 'min-width:240px' }, h('div', { class: 'barra', role: 'img', 'aria-label': `${s.disponible} disponibles, ${s.apartada} apartadas, ${s.vendida} vendidas` }, h('i', { class: 'b-d', style: `width:${s.disponible / t * 100}%` }), h('i', { class: 'b-a', style: `width:${s.apartada / t * 100}%` }), h('i', { class: 'b-v', style: `width:${s.vendida / t * 100}%` })),
+            h('div', { class: 'ley' }, h('span', {}, h('b', {}, s.disponible), ' disponibles'), h('span', {}, h('b', {}, s.apartada), ' apartadas'), h('span', {}, h('b', {}, s.vendida), ' vendidas'))),
+          h('td', { class: 'num' }, h('button', { type: 'button', class: 'btn sm g', onclick: () => disp(p.recurso_id) }, 'Disponibilidad'), ' ', p.habilitado && s.disponible > 0 ? h('a', { class: 'btn sm', href: `#/nuevo?producto=${p.recurso_id}` }, 'Apartar') : null)); })
+        : [h('tr', {}, h('td', { colspan: 4 }, vacio('Sin resultados', 'Prueba con otra palabra o clave.')))])); };
+    async function disp(id) { try { const d = await api.disponibilidad(id); modal({ titulo: d.descripcion || id, cuerpo: [h('p', { class: 'muted' }, `Disponibilidad de ${id} por sucursal.`),
+      h('table', { class: 'tabla' }, h('thead', {}, h('tr', {}, h('th', {}, 'Sucursal'), h('th', { class: 'num' }, 'Disponible'), h('th', { class: 'num' }, 'Apartada'))), h('tbody', {}, Object.entries(d.sucursales || {}).map(([s, v]) => h('tr', {}, h('td', {}, s), h('td', { class: 'num' }, v.disponible), h('td', { class: 'num' }, v.apartada)))))], acciones: [{ texto: 'Cerrar', t: 'p' }] }); } catch (e) { toastError(e); } }
+    busca.addEventListener('input', pintar); pintar();
+    return h('div', {}, h('div', { class: 'barra-h' }, h('label', { class: 'field grow' }, h('span', {}, 'Buscar'), busca)),
+      h('div', { class: 'panel flush' }, h('div', { class: 'scroll' }, h('table', { class: 'tabla' }, h('thead', {}, h('tr', {}, h('th', {}, 'Producto'), h('th', { class: 'num' }, 'Precio'), h('th', {}, 'Existencia'), h('th', {}))), cuerpo))));
+  },
+  async nuevo({ query }) {
+    const [prods, aps] = await Promise.all([api.productos(), api.apartados()]);
+    const carrito = new Map(), lim = S.cfg.limite_articulos, pct = Number(S.cfg.porcentaje_anticipo);
+    const cliente = h('select', { class: 'in', 'aria-label': 'Cliente' }, [...S.actores.values()].map((a) => h('option', { value: a.actor_id }, `${a.nombre}, ${a.actor_id}${a.es_preferente ? ' (preferente)' : ''}${a.activo ? '' : ' (inactivo)'}`)));
+    const promo = h('input', { type: 'checkbox' }), resumen = h('aside', { class: 'panel resumen', 'aria-live': 'polite' }), cat = h('div', { class: 'cat' });
+    const boton = h('button', { type: 'button', class: 'btn p', onclick: crear }, 'Crear y reservar');
+    const precio = (id) => Number(prods.find((p) => p.recurso_id === id).precio), piezas = () => [...carrito.values()].reduce((a, b) => a + b, 0), total = () => [...carrito].reduce((t, [i, q]) => t + precio(i) * q, 0);
+    const activos = () => aps.filter((a) => a.cliente_id === cliente.value && ACTIVOS.includes(a.estado)).reduce((s, a) => s + a.articulos, 0);
+    const set = (id, q) => { q > 0 ? carrito.set(id, q) : carrito.delete(id); pintar(); };
+    const regla = (ok, t) => h('li', {}, h('span', { class: ok ? 'ok' : 'no' }, ic(ok ? 'ok' : 'alerta')), t);
+    function pintar() {
+      cat.replaceChildren(...prods.filter((p) => p.habilitado).map((p) => { const d = Object.values(p.sucursales)[0]?.disponible ?? 0, q = carrito.get(p.recurso_id) || 0;
+        const c = h('input', { type: 'number', min: 0, max: d, value: q, 'aria-label': `Cantidad de ${p.descripcion}` }); c.addEventListener('change', () => set(p.recurso_id, Math.max(0, Math.min(d, parseInt(c.value, 10) || 0))));
+        return h('div', { class: `prod${d === 0 ? ' ag' : ''}` }, h('div', {}, h('div', { class: 'n' }, p.descripcion), h('div', { class: 'm' }, `${money(p.precio)}, ${d} disponibles`)),
+          h('div', { class: 'cant' }, h('button', { type: 'button', 'aria-label': 'Quitar una', disabled: q === 0, onclick: () => set(p.recurso_id, q - 1) }, '−'), c, h('button', { type: 'button', 'aria-label': 'Agregar una', disabled: q >= d, onclick: () => set(p.recurso_id, q + 1) }, '+'))); }));
+      pintarResumen(); }
+    function pintarResumen() {
+      const t = total(), n = piezas(), a = S.actores.get(cliente.value), act = activos(), min = Math.ceil(t * pct * 100) / 100;
+      resumen.replaceChildren(h('h2', {}, 'Ticket del apartado'),
+        n ? h('table', {}, h('tbody', {}, [...carrito].map(([i, q]) => h('tr', {}, h('td', {}, `${q} x ${prods.find((p) => p.recurso_id === i).descripcion}`), h('td', { class: 'num' }, money(precio(i) * q)))), h('tr', { class: 'tot' }, h('td', {}, 'Total'), h('td', { class: 'num' }, money(t))), h('tr', {}, h('td', {}, `Anticipo mínimo (${Math.round(pct * 100)} %)`), h('td', { class: 'num' }, money(min)))))
+          : h('p', { class: 'muted' }, 'Agrega productos del catálogo para calcular el anticipo.'),
+        h('ul', { class: 'chk-l' }, regla(!!(a && a.activo), a && a.activo ? 'Cliente activo' : 'Cliente inactivo: el servidor rechazará el apartado'), regla(n > 0, n > 0 ? 'Incluye al menos una partida' : 'Falta al menos una partida'), regla(act + n <= lim, `Usa ${act + n} de ${lim} artículos permitidos por cliente (${act} ya activos)`)),
+        h('label', { class: 'chk' }, promo, 'Promoción activa (afecta la regla de beneficio)'), boton);
+      boton.disabled = n === 0; }
+    async function crear() {
+      boton.disabled = true; boton.setAttribute('aria-busy', 'true');
+      try { const a = await api.crear({ cliente_id: cliente.value, promocion_activa: promo.checked, items: [...carrito].map(([recurso_id, cantidad]) => ({ recurso_id, cantidad })) });
+        toast('Reserva temporal abierta', `${a.apartado_id}: paga al menos ${money(a.anticipo_minimo)} en ${S.cfg.minutos_reserva} min.`); location.hash = '#/mostrador'; setTimeout(() => abrirDetalle(a.apartado_id), 150); }
+      catch (e) { toastError(e); } finally { boton.removeAttribute('aria-busy'); boton.disabled = piezas() === 0; } }
+    cliente.addEventListener('change', pintarResumen);
+    const pre = query.get('producto'); if (pre && prods.some((p) => p.recurso_id === pre)) carrito.set(pre, 1);
+    pintar();
+    return h('div', { class: 'g2' }, h('div', {}, h('label', { class: 'field', style: 'margin-bottom:14px' }, h('span', {}, 'Cliente'), cliente), cat), resumen);
+  },
+  async apartados({ query }) {
+    const est = h('select', { class: 'in', 'aria-label': 'Estado' }, h('option', { value: '' }, 'Todos'), Object.keys(ESTADOS).map((e) => h('option', { value: e }, ESTADOS[e][0])));
+    const cli = h('input', { class: 'in', type: 'search', placeholder: 'Ej. TEC-C001', 'aria-label': 'Cliente' }); est.value = query.get('estado') || '';
+    const cuerpo = h('tbody'), cuenta = h('p', { class: 'muted', 'aria-live': 'polite' });
+    async function cargar() { try { const l = await api.apartados({ estado: est.value, cliente_id: cli.value.trim() }); cuenta.textContent = `${l.length} ${l.length === 1 ? 'apartado' : 'apartados'}`;
+      cuerpo.replaceChildren(...(l.length ? l.map((a) => h('tr', { class: 'clic', tabindex: 0, onclick: () => abrirDetalle(a.apartado_id), onkeydown: (e) => { if (e.key === 'Enter') abrirDetalle(a.apartado_id); } },
+        h('td', { class: 'mono' }, a.apartado_id), h('td', {}, nombre(a.cliente_id)), h('td', {}, chip(a.estado)), h('td', { class: 'num' }, a.articulos), h('td', { class: 'num' }, money(a.total)), h('td', { class: 'num' }, money(a.saldo)), h('td', {}, plazo(a))))
+        : [h('tr', {}, h('td', { colspan: 7 }, vacio('Sin resultados', 'Cambia el estado o el cliente del filtro.')))])); } catch (e) { cuerpo.replaceChildren(h('tr', {}, h('td', { colspan: 7 }, errPanel(e, cargar)))); } }
+    est.addEventListener('change', cargar); cli.addEventListener('change', cargar); cargar();
+    return h('div', {}, h('div', { class: 'barra-h' }, h('label', { class: 'field' }, h('span', {}, 'Estado'), est), h('label', { class: 'field' }, h('span', {}, 'Cliente'), cli), cuenta),
+      h('div', { class: 'panel flush' }, h('div', { class: 'scroll' }, h('table', { class: 'tabla' }, h('thead', {}, h('tr', {}, ['Apartado', 'Cliente', 'Estado', 'Piezas', 'Total', 'Saldo', 'Plazo'].map((t, i) => h('th', { class: i >= 3 && i < 6 ? 'num' : '' }, t)))), cuerpo))));
+  },
+  async monedero() {
+    const sel = h('select', { class: 'in', 'aria-label': 'Cliente' }, [...S.actores.values()].map((a) => h('option', { value: a.actor_id }, `${a.nombre}, ${a.actor_id}`))), out = h('div');
+    async function ver() { out.replaceChildren(cargando()); try { const m = await api.monedero(sel.value), ab = Object.entries(m.abonos || {});
+      out.replaceChildren(h('p', { class: 'muted' }, 'Saldo a favor'), h('div', { class: 'saldo' }, money(m.saldo)), h('h3', { style: 'margin:16px 0 8px' }, 'Abonos por apartado vencido'),
+        ab.length ? h('table', { class: 'tabla' }, h('thead', {}, h('tr', {}, h('th', {}, 'Apartado'), h('th', { class: 'num' }, 'Monto'))), h('tbody', {}, ab.map(([k, v]) => h('tr', {}, h('td', { class: 'mono' }, k), h('td', { class: 'num' }, money(v))))))
+          : vacio('Sin abonos', 'El anticipo llega aquí cuando un apartado confirmado vence a los 30 días. Una sola vez por apartado.')); } catch (e) { out.replaceChildren(errPanel(e, ver)); } }
+    sel.addEventListener('change', ver); ver();
+    return h('div', { class: 'panel' }, h('h2', {}, 'Monedero del cliente'), h('label', { class: 'field', style: 'max-width:360px;margin-bottom:14px' }, h('span', {}, 'Cliente'), sel), out);
+  },
+  async eventos() {
+    const ev = await api.eventos(200);
+    return h('div', { class: 'panel flush' }, h('div', { class: 'scroll' }, h('table', { class: 'tabla' }, h('thead', {}, h('tr', {}, h('th', {}, 'Cuándo'), h('th', {}, 'Evento'), h('th', {}, 'Apartado'), h('th', {}, 'Datos'))),
+      h('tbody', {}, ev.length ? ev.map((e) => h('tr', {}, h('td', { class: 'muted' }, fecha(e.ocurrido_en)), h('td', {}, h('b', {}, EV[e.tipo] || e.tipo)), h('td', { class: 'mono' }, e.payload.apartado_id || '—'), h('td', { class: 'mono muted' }, datosEv(e.payload))))
+        : [h('tr', {}, h('td', { colspan: 4 }, vacio('Aún no hay eventos', 'Cada cambio de estado de un apartado queda registrado aquí.')))]))));
+  },
+  async pruebas() {
+    const out = h('div'), b = h('button', { type: 'button', class: 'btn p', onclick: correr }, ic('escudo'), 'Ejecutar los casos');
+    const tabla = (titulo, cols, filas) => h('div', { class: 'panel flush' }, h('h2', { style: 'padding:16px 20px 0' }, titulo), h('div', { class: 'scroll' }, h('table', { class: 'tabla' },
+      h('thead', {}, h('tr', {}, cols.map((c) => h('th', {}, c[0])))), h('tbody', {}, filas.map((f) => h('tr', {}, cols.map((c) => h('td', { class: 'mono' }, String(f[c[1]] ?? '')))))))));
+    async function correr() { b.disabled = true; b.setAttribute('aria-busy', 'true'); out.replaceChildren(cargando());
+      try { const r = await api.pruebas(), keys = (o) => Object.keys(o[0] || {}).map((k) => [k.replaceAll('_', ' '), k]);
+        out.replaceChildren(h('dl', { class: 'met' }, h('div', {}, h('dt', {}, 'Casos de regla'), h('dd', {}, r.casos.length)), h('div', {}, h('dt', {}, 'Transiciones'), h('dd', {}, r.transiciones.length))),
+          tabla('Transiciones', keys(r.transiciones), r.transiciones), tabla('Casos de regla (Specifications)', keys(r.casos), r.casos));
+      } catch (e) { out.replaceChildren(errPanel(e)); } finally { b.disabled = false; b.removeAttribute('aria-busy'); } }
+    return h('div', {}, h('div', { class: 'panel', style: 'margin-bottom:16px' }, h('h2', {}, 'Evidencia de los CSV del PIA'), h('p', { class: 'muted', style: 'margin:6px 0 14px' }, 'Corre casos_prueba.csv y transiciones_prueba.csv con la state machine y las Specifications reales, en una base temporal que no toca tus datos.'), b), out);
+  },
+};
+
+/* ============================ router, reloj y arranque ============================ */
+const RUTAS = [['mostrador', 'Mostrador', 'Estado de cada apartado', 'tablero'], ['inventario', 'Inventario', 'Existencias y disponibilidad', 'caja'], ['nuevo', 'Nuevo apartado', 'Reserva con anticipo del 20 %', 'mas'], ['apartados', 'Apartados', 'Todos, con filtros', 'lista'], ['monedero', 'Monedero', 'Saldo a favor por vencimientos', 'cartera'], ['eventos', 'Eventos', 'Domain Events registrados', 'pulso'], ['pruebas', 'Pruebas CSV', 'Evidencia de los casos del PIA', 'escudo']];
+let rutaActual = null;
+function leerRuta() { const [ruta, q] = (location.hash.slice(2) || 'mostrador').split('?'); return { nombre: vistas[ruta] ? ruta : 'mostrador', query: new URLSearchParams(q || '') }; }
+let gen = 0;
+async function cargarVista() {
+  const r = rutaActual, mi = ++gen, meta = RUTAS.find((x) => x[0] === r.nombre), v = $('vista');
+  $('titulo').replaceChildren(meta[1], h('span', { class: 'sub' }, meta[2])); document.title = `${meta[1]} · TecnoStock`;
+  document.querySelectorAll('#nav a').forEach((a) => (a.dataset.n === r.nombre ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current')));
+  if (!v.firstChild) v.replaceChildren(cargando());
+  try { const nodo = await vistas[r.nombre](r); if (mi === gen) v.replaceChildren(nodo); } catch (e) { if (mi === gen) v.replaceChildren(errPanel(e, cargarVista)); }
+}
+window.addEventListener('hashchange', () => { rutaActual = leerRuta(); $('vista').replaceChildren(); cargarVista(); $('vista').focus({ preventScroll: true }); });
+
+function pintarReloj() {
+  const b = $('reloj-btn'), pop = $('reloj-pop');
+  b.dataset.sim = String(simulado()); b.replaceChildren(ic('reloj'), simulado() ? `Reloj simulado: ${ahora().toLocaleString('es-MX', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}` : 'Reloj real');
+  const salto = (t, ms) => h('button', { type: 'button', class: 'btn sm', onclick: () => setDesfase(desfase + ms) }, t);
+  pop.replaceChildren(h('p', {}, 'Para demostrar la reserva de 15 min y la vigencia de 30 días sin esperar, adelanta el reloj. Afecta pagos, entregas y vencimientos.'),
+    h('div', { class: 'fila' }, salto('+16 min', 16 * 60e3), salto('+1 día', 864e5), salto('+31 días', 31 * 864e5)),
+    h('div', { class: 'fila' }, h('button', { type: 'button', class: 'btn sm', disabled: !simulado(), onclick: () => setDesfase(0) }, 'Volver a la hora real'),
+      h('button', { type: 'button', class: 'btn sm p', onclick: async () => { try { const r = await api.vencimientos(); toast('Vencimientos procesados', `${(r.reservas_expiradas || []).length} reservas expiradas, ${(r.apartados_vencidos || []).length} apartados vencidos.`); refrescar(); } catch (e) { toastError(e); } } }, 'Procesar vencimientos')));
+}
+$('reloj-btn').addEventListener('click', () => { const p = $('reloj-pop'); p.hidden = !p.hidden; $('reloj-btn').setAttribute('aria-expanded', String(!p.hidden)); });
+document.addEventListener('click', (e) => { if (!e.composedPath().includes(document.querySelector('.reloj'))) { $('reloj-pop').hidden = true; $('reloj-btn').setAttribute('aria-expanded', 'false'); } });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') $('reloj-pop').hidden = true; });
+
+async function iniciar() {
+  $('nav').replaceChildren(...RUTAS.map(([k, t, , i]) => h('a', { href: `#/${k}`, dataset: { n: k } }, ic(i), t)));
+  pintarReloj();
+  try {
+    const [cfg, ac] = await Promise.all([api.config(), api.actores()]);
+    S.cfg = cfg; ac.forEach((a) => S.actores.set(a.actor_id, a));
+    $('reglas').replaceChildren(...[['Anticipo mínimo', `${Math.round(Number(cfg.porcentaje_anticipo) * 100)} %`], ['Artículos por cliente', cfg.limite_articulos], ['Reserva temporal', `${cfg.minutos_reserva} min`], ['Vigencia', `${cfg.dias_vigencia} días`]].flatMap(([t, v]) => [h('dt', {}, t), h('dd', {}, v)]));
+  } catch (e) { $('vista').replaceChildren(errPanel(e, () => location.reload())); return; }
+  rutaActual = leerRuta(); cargarVista();
+}
+iniciar();
+</script>
+</body>
+</html>

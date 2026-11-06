@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: tecnostock-api
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: tecnostock-db
+          property: connectionString
+      - key: PYTHONUNBUFFERED
+        value: "1"
+
+databases:
+  - name: tecnostock-db
+    plan: free
+    databaseName: tecnostock
+    user: tecnostock

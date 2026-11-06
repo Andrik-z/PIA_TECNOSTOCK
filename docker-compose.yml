@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASS:-secret}
+      POSTGRES_DB: ${DB_NAME:-tecnostock_db}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-tecnostock_db}"]
+      interval: 3s
+      retries: 20
+
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://${DB_USER:-postgres}:${DB_PASS:-secret}@db:5432/${DB_NAME:-tecnostock_db}
+      SEED_DATA: ${SEED_DATA:-true}
+      LIMITE_ARTICULOS: ${LIMITE_ARTICULOS:-5}
+
+  tests:
+    build: .
+    command: pytest
+    profiles: ["tests"]       # docker compose --profile tests run --rm tests
+    depends_on:
+      db:
+        condition: service_healthy

@@ -1,0 +1,121 @@
+﻿caso_id,operacion_id,tipo_prueba,regla_a_verificar,resultado_alumno,instrucciones
+TEC-T001,TEC-O001,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B001,TEC-O001,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T002,TEC-O002,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B002,TEC-O002,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T003,TEC-O003,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B003,TEC-O003,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T004,TEC-O004,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B004,TEC-O004,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T005,TEC-O005,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B005,TEC-O005,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T006,TEC-O006,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B006,TEC-O006,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T007,TEC-O007,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B007,TEC-O007,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T008,TEC-O008,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B008,TEC-O008,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T009,TEC-O009,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B009,TEC-O009,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T010,TEC-O010,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B010,TEC-O010,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T011,TEC-O011,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B011,TEC-O011,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T012,TEC-O012,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B012,TEC-O012,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T013,TEC-O013,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B013,TEC-O013,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T014,TEC-O014,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B014,TEC-O014,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T015,TEC-O015,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B015,TEC-O015,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T016,TEC-O016,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B016,TEC-O016,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T017,TEC-O017,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B017,TEC-O017,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T018,TEC-O018,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B018,TEC-O018,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T019,TEC-O019,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B019,TEC-O019,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T020,TEC-O020,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B020,TEC-O020,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T021,TEC-O021,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B021,TEC-O021,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T022,TEC-O022,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B022,TEC-O022,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T023,TEC-O023,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B023,TEC-O023,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T024,TEC-O024,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B024,TEC-O024,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T025,TEC-O025,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B025,TEC-O025,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T026,TEC-O026,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B026,TEC-O026,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T027,TEC-O027,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B027,TEC-O027,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T028,TEC-O028,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B028,TEC-O028,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T029,TEC-O029,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B029,TEC-O029,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T030,TEC-O030,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B030,TEC-O030,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T031,TEC-O031,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B031,TEC-O031,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T032,TEC-O032,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B032,TEC-O032,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T033,TEC-O033,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B033,TEC-O033,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T034,TEC-O034,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B034,TEC-O034,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T035,TEC-O035,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B035,TEC-O035,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T036,TEC-O036,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B036,TEC-O036,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T037,TEC-O037,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B037,TEC-O037,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T038,TEC-O038,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B038,TEC-O038,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T039,TEC-O039,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B039,TEC-O039,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T040,TEC-O040,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B040,TEC-O040,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T041,TEC-O041,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B041,TEC-O041,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T042,TEC-O042,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B042,TEC-O042,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T043,TEC-O043,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B043,TEC-O043,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T044,TEC-O044,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B044,TEC-O044,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T045,TEC-O045,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B045,TEC-O045,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T046,TEC-O046,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B046,TEC-O046,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T047,TEC-O047,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B047,TEC-O047,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T048,TEC-O048,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B048,TEC-O048,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T049,TEC-O049,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B049,TEC-O049,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T050,TEC-O050,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B050,TEC-O050,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T051,TEC-O051,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B051,TEC-O051,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T052,TEC-O052,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B052,TEC-O052,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T053,TEC-O053,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B053,TEC-O053,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T054,TEC-O054,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B054,TEC-O054,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T055,TEC-O055,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B055,TEC-O055,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T056,TEC-O056,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B056,TEC-O056,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T057,TEC-O057,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B057,TEC-O057,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T058,TEC-O058,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B058,TEC-O058,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T059,TEC-O059,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B059,TEC-O059,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
+TEC-T060,TEC-O060,validar_operacion,validar cliente activo AND detalle no vacio AND autorizacion,PENDIENTE,Verificar precondiciones en dominio
+TEC-B060,TEC-O060,evaluar_beneficio,VIP AND total >=1500 AND NOT promocion,PENDIENTE,Composicion Specification AND/NOT
