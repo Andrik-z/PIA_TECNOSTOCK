@@ -3,7 +3,7 @@ services:
     name: tecnostock-api
     runtime: docker
     plan: free
-    healthCheckPath: /api/v1/health
+    healthCheckPath: /health
     envVars:
       - key: APP_ENV
         value: production
