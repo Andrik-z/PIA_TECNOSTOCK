@@ -38,3 +38,5 @@ nunca vender lo apartado (BRD 5.2) · serie única por unidad (US-16). Ver `docs
 
 ## Códigos HTTP
 200/201 éxito · 400 dato inválido · 404 no existe · 409 conflicto (stock, transición, duplicado) · 422 regla de negocio.
+
+Proyecto TecnoStock - Equipo 5
